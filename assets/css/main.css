@@ -700,7 +700,7 @@ body.is-preload #main .item.thumb img {
 		flex-shrink: 1;
 		width: calc(50vw - 15px) !important;
 		margin: 2.5px;
-		box-shadow: 0 0 0 5px #ffffff;
+		box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 	}
 
 	#main .item.intro {
