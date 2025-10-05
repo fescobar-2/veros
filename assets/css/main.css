@@ -173,19 +173,69 @@ html {
 }
 
 body {
-	background-image: url("images/overlay.png"), -moz-linear-gradient(top, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0.65)), url("../../images/fulls/17.jpg");
-	background-image: url("images/overlay.png"), -webkit-linear-gradient(top, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0.65)), url("../../images/fulls/17.jpg");
-	background-image: url("images/overlay.png"), -ms-linear-gradient(top, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0.65)), url("../../images/fulls/17.jpg");
-	background-image: url("images/overlay.png"), linear-gradient(top, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0.65)), url("../../images/fulls/17.jpg");
-	background-position: top left, bottom left, auto;
-	background-size: auto, 100% 100%, cover;
-	background-attachment: fixed;
-	background-repeat: no-repeat, auto;
-	position: relative;
-	background-color: #150C07;
-	line-height: 1.75em;
-	overflow-x: hidden;
-	overflow-y: auto;
+  /* 1) overlay texture, 2) gradient, 3) photo */
+  background-image:
+    url("images/overlay.png"),
+    linear-gradient(to bottom, rgba(0,0,0,0) 75%, rgba(0,0,0,0.65)),
+    url("../../images/fulls/25.png");
+
+  /* overlay can repeat; gradient covers once; photo repeats horizontally */
+  background-repeat: repeat, no-repeat, repeat-x;
+
+  /* keep overlay/gradient aligned; photo anchored left, centered vertically */
+  background-position: top left, bottom left, left center;
+
+  /* overlay natural, gradient stretches, photo shows full image (no crop) */
+  background-size: auto, 100% 100%, contain;
+
+  /* optional: keep overlay/gradient fixed; photo can scroll or be fixed too */
+  background-attachment: fixed, fixed, fixed; /* or: fixed, fixed, scroll */
+
+  background-color: #150C07;
+}
+
+/* root variable to control fade */
+:root {
+  --bw-opacity: 0; /* 0 = fully color, 1 = fully black and white */
+}
+
+/* colorful background stays on body as normal */
+body {
+  background-image:
+    url("images/overlay.png"),
+    linear-gradient(to bottom, rgba(0,0,0,0) 75%, rgba(0,0,0,0.65)),
+    url("../../images/fulls/25.png");
+  background-repeat: repeat, no-repeat, repeat-x;
+  background-position: top left, bottom left, right bottom;
+  background-size: auto, 100% 100%, contain;
+  background-attachment: fixed, fixed, fixed;
+  background-color: #150C07;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* black‑and‑white version sits above, starts transparent */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+
+  /* same background but black and white */
+  background-image:
+    url("images/overlay.png"),
+    linear-gradient(to bottom, rgba(0,0,0,0) 75%, rgba(0,0,0,0.65)),
+    url("../../images/fulls/25.png");
+  background-repeat: repeat, no-repeat, repeat-x;
+  background-position: top left, bottom left, right bottom;
+  background-size: auto, 100% 100%, contain;
+  background-attachment: fixed, fixed, fixed;
+
+  filter: grayscale(1) contrast(10); /* turn it true black & white */
+
+  opacity: var(--bw-opacity);        /* fade control */
+  transition: opacity 0.4s ease;     /* smooth fade */
 }
 
 body.is-preload *,

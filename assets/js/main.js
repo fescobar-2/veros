@@ -411,4 +411,20 @@
 
 		})();
 
+	(function () {
+	const root = document.documentElement;
+	function updateBW() {
+		const max = $main[0].scrollWidth - $main[0].clientWidth;
+		const progress = max > 0 ? $main[0].scrollLeft / max : 0;
+		// progress 0 = color, 1 = black & white
+		root.style.setProperty('--bw-opacity', progress.toFixed(3));
+	}
+	$main.on('scroll', () => requestAnimationFrame(updateBW));
+	$(window).on('resize', updateBW);
+	updateBW();
+	})();
+
+
+
+	
 })(jQuery);
