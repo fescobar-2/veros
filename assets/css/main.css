@@ -200,42 +200,43 @@ body {
    ============================================== */
 
 :root {
-  --bg-desktop: url("../../images/fulls/25.png");
-  --bg-mobile:  url("../../images/fulls/13.jpg");
-  --bw-opacity: 0; /* 0 = color only, 1 = full grayscale */
+	--bg-desktop: url("../../images/fulls/25.png");
+	--bg-mobile: url("../../images/fulls/13.jpg");
+	--bw-opacity: 0;
+	/* 0 = color only, 1 = full grayscale */
 }
 
 /* COLOR LAYER */
 body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  background-image:
-    url("images/overlay.png"),
-    linear-gradient(to bottom, rgba(0,0,0,0) 75%, rgba(0,0,0,0.65)),
-    var(--bg-desktop);
-  background-repeat: no-repeat, no-repeat, no-repeat;
-  background-position: center center;
-  background-size: auto, 100% 100%, cover;
-  background-attachment: fixed, fixed, fixed;
+	content: "";
+	position: fixed;
+	inset: 0;
+	z-index: -2;
+	background-image:
+		url("images/overlay.png"),
+		linear-gradient(to bottom, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0.65)),
+		var(--bg-desktop);
+	background-repeat: no-repeat, no-repeat, no-repeat;
+	background-position: center center;
+	background-size: auto, 100% 100%, cover;
+	background-attachment: fixed, fixed, fixed;
 }
 
 /* GRAYSCALE LAYER */
 body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    url("images/overlay.png"),
-    linear-gradient(to bottom, rgba(0,0,0,0) 75%, rgba(0,0,0,0.65)),
-    var(--bg-desktop);
-  background-repeat: repeat, no-repeat, no-repeat;
-  background-position: center center;
-  background-size: auto, 100% 100%, cover;
-  background-attachment: fixed, fixed, fixed;
+	content: "";
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+	background-image:
+		url("images/overlay.png"),
+		linear-gradient(to bottom, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0.65)),
+		var(--bg-desktop);
+	background-repeat: repeat, no-repeat, no-repeat;
+	background-position: center center;
+	background-size: auto, 100% 100%, cover;
+	background-attachment: fixed, fixed, fixed;
 
 	filter: grayscale(1) contrast(2.2) brightness(1.15);
 	opacity: var(--bw-opacity);
@@ -244,16 +245,17 @@ body::after {
 
 /* 📱 MOBILE BACKGROUND OVERRIDE */
 @media (max-width: 768px) {
-  body::before,
-  body::after {
-    background-image:
-      url("images/overlay.png"),
-      linear-gradient(to bottom, rgba(0,0,0,0) 75%, rgba(0,0,0,0.65)),
-      var(--bg-mobile);
-    background-position: center top;
-    background-size: cover;
-    background-attachment: scroll, scroll, scroll;
-  }
+
+	body::before,
+	body::after {
+		background-image:
+			url("images/overlay.png"),
+			linear-gradient(to bottom, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0.65)),
+			var(--bg-mobile);
+		background-position: center top;
+		background-size: cover;
+		background-attachment: scroll, scroll, scroll;
+	}
 }
 
 
@@ -819,6 +821,16 @@ body.is-preload #main .item.thumb img {
 	z-index: 10002;
 }
 
+#footer .icons a.fa-instagram {
+	color: #694d5a !important;
+	opacity: 1 !important;
+}
+
+#footer .icons a.fa-instagram:hover,
+#footer .icons a.fa-instagram:focus {
+	color: #694d5a !important;
+}
+
 #footer>section:first-child {
 	text-align: left;
 	max-width: 36em;
@@ -839,8 +851,10 @@ body.is-preload #main .item.thumb img {
 	display: inline-block;
 	margin-left: 1em;
 	padding-left: 1em;
-	border-left: solid 1px rgba(255, 255, 255, 0.25);
+	border-left: solid 1px rgba(11, 11, 11, 0.25);
 	line-height: 1em;
+	color: #694d5a;
+	font-weight: bolder;
 }
 
 #footer .copyright li:first-child {
@@ -1029,67 +1043,119 @@ body.is-preload #main .item.thumb img {
 /* ===== FINAL BACKGROUND OVERRIDE (put at the end) ===== */
 
 /* neutralize any earlier body background */
-body { background: #150C07 none !important; }
-
-/* vars */
-:root{
-  --bg-desktop: url("../../images/fulls/31.jpg");
-  --bg-mobile:  url("../../images/fulls/13.jpg");
-  --bg-photo:   var(--bg-desktop);
-  --bw-opacity: 0; /* 0 = color, 1 = black&white */
+body {
+	background: #150C07 none !important;
 }
 
-/* switch to mobile asset under 768px */
-@media (max-width: 768px){
-  :root{ --bg-photo: var(--bg-mobile); }
+/* desktop defaults */
+body::before,
+body::after {
+	content: "";
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	z-index: -2;
+	/* ::after will be -1 below */
+	background-repeat: repeat, no-repeat, no-repeat !important;
+	background-position: top left, bottom left, right bottom !important;
+	background-size: auto, 100% 100%, contain !important;
+	transform: translateZ(0);
 }
 
-/* COLOR layer (behind) */
-body::before{
-  content:"";
-  position:fixed; inset:0; z-index:-2; pointer-events:none;
-  background-image:
-    url("images/overlay.png"),
-    /* make the bottom darker but not too much so the girl stays visible */
-    linear-gradient(to bottom, rgba(0,0,0,0) 82%, rgba(0,0,0,0.35)),
-    var(--bg-photo);
-  /* overlay repeats, gradient covers, photo = single image */
-  background-repeat: repeat, no-repeat, no-repeat !important;
-  /* overlay/gradient aligned to page; photo anchored bottom-right on desktop */
-  background-position: top left, bottom left, right bottom !important;
-  /* overlay auto, gradient full, photo not cropped on desktop */
-  background-size: auto, 100% 100%, contain !important;
-  transform: translateZ(0);
+/* COLOR (desktop 31.jpg) */
+body::before {
+	z-index: -2;
+	background-image:
+		url("images/overlay.png"),
+		linear-gradient(to bottom, rgba(0, 0, 0, 0) 82%, rgba(0, 0, 0, 0.35)),
+		url("../../images/fulls/31.jpg") !important;
 }
 
-/* BLACK & WHITE layer (fades in above color) */
-body::after{
-  content:"";
-  position:fixed; inset:0; z-index:-1; pointer-events:none;
-  background-image:
-    url("images/overlay.png"),
-    linear-gradient(to bottom, rgba(0,0,0,0) 82%, rgba(0,0,0,0.35)),
-    var(--bg-photo);
-  background-repeat: repeat, no-repeat, no-repeat !important;
-  background-position: top left, bottom left, right bottom !important;
-  background-size: auto, 100% 100%, contain !important;
+/* B&W (desktop 31.jpg) */
+body::after {
+	z-index: -1;
+	background-image:
+		url("images/overlay.png"),
+		linear-gradient(to bottom, rgba(0, 0, 0, 0) 82%, rgba(0, 0, 0, 0.35)),
+		url("../../images/fulls/31.jpg") !important;
 
-  /* true black & white (not gray) + smooth fade */
-  filter: grayscale(1) contrast(2.2) brightness(1.15);
-  opacity: var(--bw-opacity);
-  transition: opacity 1.5s ease-in-out;
+	/* true B&W + smooth fade */
+	filter: grayscale(1) contrast(2.2) brightness(1.15);
+	opacity: var(--bw-opacity, 0);
+	transition: opacity 1.5s ease-in-out;
 }
 
-/* MOBILE: keep vertical composition with cover + center top */
-@media (max-width: 768px){
-  body::before,
-  body::after{
-    background-position: top left, bottom left, center top !important;
-    background-size: auto, 100% 100%, cover !important;
-  }
+/* ---------- MOBILE OVERRIDE: force 13.jpg ---------- */
+@media (max-width: 768px) {
+	html body::before {
+		background-image:
+			url("images/overlay.png"),
+			/* fade direction more natural on tall screens */
+			linear-gradient(to top, rgba(0, 0, 0, 0) 82%, rgba(0, 0, 0, 0.35)),
+			url("../../images/fulls/14.jpg") !important;
+		background-position: top left, bottom left, center top !important;
+		background-size: auto, 100% 100%, cover !important;
+	}
+
+	html body::after {
+		background-image:
+			url("images/overlay.png"),
+			linear-gradient(to top, rgba(0, 0, 0, 0) 82%, rgba(0, 0, 0, 0.35)),
+			url("../../images/fulls/14.jpg") !important;
+		background-position: top left, bottom left, center top !important;
+		background-size: auto, 100% 100%, cover !important;
+	}
+
+	#main .item.intro.is-transparent {
+		background: transparent !important;
+		background-image: none !important;
+		box-shadow: none !important;
+		border: 0 !important;
+	}
 }
 
-/* reduced-motion users get no animation */
-@media (prefers-reduced-motion: reduce){
-  body::after{ transition: none; }
+/* =========================
+   Glass effect (mobile only)
+   ========================= */
+@media (max-width: 768px) {
+	:root {
+		--glass-bg: rgba(134, 127, 123, 0.24);
+		/* transparency */
+		--glass-border: rgba(255, 255, 255, 0.12);
+		--glass-blur: 1px;
+		/* 6–12px looks good */
+		--glass-radius: 16px;
+	}
+
+	/* turn the intro card into frosted glass */
+	#main .item.intro.is-transparent {
+		position: relative;
+		background: var(--glass-bg) !important;
+		/* translucent film */
+		background-image: none !important;
+		/* kill any gradients */
+		border: 1px solid var(--glass-border);
+		border-radius: var(--glass-radius);
+		box-shadow: 0 8px 24px rgba(0, 0, 0, .28);
+		-webkit-backdrop-filter: blur(var(--glass-blur)) saturate(120%);
+		backdrop-filter: blur(var(--glass-blur)) saturate(120%);
+		/* glass/frosted */
+		padding: 1.25rem 1.5rem;
+		/* comfy spacing */
+	}
+
+	/* keep text readable over busy backgrounds */
+	#main .item.intro.is-transparent h1,
+	#main .item.intro.is-transparent p {
+		color: rgba(255, 255, 255, .95);
+		text-shadow: 0 2px 6px rgba(0, 0, 0, .35);
+	}
+}
+
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce) {
+	body::after {
+		transition: none;
+	}
 }
