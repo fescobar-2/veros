@@ -1,11 +1,5 @@
-@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600");
+/* @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600"); */
 @import url("fontawesome-all.min.css");
-
-/*
-	Parallelism by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
 
 html,
 body,
@@ -172,34 +166,22 @@ html {
 	box-sizing: inherit;
 }
 
-body {
-  /* 1) overlay texture, 2) gradient, 3) photo */
+/* body {
   background-image:
     url("images/overlay.png"),
     linear-gradient(to bottom, rgba(0,0,0,0) 75%, rgba(0,0,0,0.65)),
     url("../../images/fulls/25.png");
-
-  /* overlay can repeat; gradient covers once; photo repeats horizontally */
   background-repeat: repeat, no-repeat, repeat-x;
-
-  /* keep overlay/gradient aligned; photo anchored left, centered vertically */
   background-position: top left, bottom left, left center;
-
-  /* overlay natural, gradient stretches, photo shows full image (no crop) */
   background-size: auto, 100% 100%, contain;
-
-  /* optional: keep overlay/gradient fixed; photo can scroll or be fixed too */
-  background-attachment: fixed, fixed, fixed; /* or: fixed, fixed, scroll */
-
+  background-attachment: fixed, fixed, fixed;
   background-color: #150C07;
+} */
+
+/* :root {
+  --bw-opacity: 0;
 }
 
-/* root variable to control fade */
-:root {
-  --bw-opacity: 0; /* 0 = fully color, 1 = fully black and white */
-}
-
-/* colorful background stays on body as normal */
 body {
   background-image:
     url("images/overlay.png"),
@@ -212,44 +194,68 @@ body {
   background-color: #150C07;
   position: relative;
   overflow-x: hidden;
+} */
+/* ==============================================
+   COLOR + GRAYSCALE BACKGROUND LAYERS
+   ============================================== */
+
+:root {
+  --bg-desktop: url("../../images/fulls/25.png");
+  --bg-mobile:  url("../../images/fulls/13.jpg");
+  --bw-opacity: 0; /* 0 = color only, 1 = full grayscale */
 }
 
-/* Reset box model */
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
-
-/* Fixed visual background layer */
+/* COLOR LAYER */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: -1; /* behind everything */
-
-  /* Your three-layer background: overlay + gradient + photo */
+  z-index: -2;
   background-image:
     url("images/overlay.png"),
     linear-gradient(to bottom, rgba(0,0,0,0) 75%, rgba(0,0,0,0.65)),
-    url("../../images/fulls/25.png");
-
-  background-repeat: repeat, no-repeat, repeat-x;
-  background-position: top left, bottom left, left center;
-  background-size: auto, 100%, cover;
-
-  /* Prevent scroll artifacts on mobile */
-  transform: translateZ(0);
-  will-change: transform;
+    var(--bg-desktop);
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-position: center center;
+  background-size: auto, 100% 100%, cover;
+  background-attachment: fixed, fixed, fixed;
 }
 
-/* Ensure content scrolls over the fixed layer */
-body {
-  position: relative;
-  min-height: 100%;
-  overflow-x: hidden;
-  color: white; /* optional */
+/* GRAYSCALE LAYER */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    url("images/overlay.png"),
+    linear-gradient(to bottom, rgba(0,0,0,0) 75%, rgba(0,0,0,0.65)),
+    var(--bg-desktop);
+  background-repeat: repeat, no-repeat, no-repeat;
+  background-position: center center;
+  background-size: auto, 100% 100%, cover;
+  background-attachment: fixed, fixed, fixed;
+
+	filter: grayscale(1) contrast(2.2) brightness(1.15);
+	opacity: var(--bw-opacity);
+	transition: opacity 1.5s ease-in-out;
 }
+
+/* 📱 MOBILE BACKGROUND OVERRIDE */
+@media (max-width: 768px) {
+  body::before,
+  body::after {
+    background-image:
+      url("images/overlay.png"),
+      linear-gradient(to bottom, rgba(0,0,0,0) 75%, rgba(0,0,0,0.65)),
+      var(--bg-mobile);
+    background-position: center top;
+    background-size: cover;
+    background-attachment: scroll, scroll, scroll;
+  }
+}
+
 
 body.is-preload *,
 body.is-preload *:before,
@@ -264,7 +270,7 @@ body.is-preload *:after {
 	transition: none !important;
 }
 
-@media screen and (max-width: 1280px) {
+/* @media screen and (max-width: 1280px) {
 
 	body {
 		background-attachment: scroll;
@@ -281,7 +287,7 @@ body.is-preload *:after {
 		background-position: top left, bottom left, 50% 0%;
 	}
 
-}
+} */
 
 body,
 input,
@@ -1018,4 +1024,72 @@ body.is-preload #main .item.thumb img {
 		display: none !important;
 	}
 
+}
+
+/* ===== FINAL BACKGROUND OVERRIDE (put at the end) ===== */
+
+/* neutralize any earlier body background */
+body { background: #150C07 none !important; }
+
+/* vars */
+:root{
+  --bg-desktop: url("../../images/fulls/31.jpg");
+  --bg-mobile:  url("../../images/fulls/13.jpg");
+  --bg-photo:   var(--bg-desktop);
+  --bw-opacity: 0; /* 0 = color, 1 = black&white */
+}
+
+/* switch to mobile asset under 768px */
+@media (max-width: 768px){
+  :root{ --bg-photo: var(--bg-mobile); }
+}
+
+/* COLOR layer (behind) */
+body::before{
+  content:"";
+  position:fixed; inset:0; z-index:-2; pointer-events:none;
+  background-image:
+    url("images/overlay.png"),
+    /* make the bottom darker but not too much so the girl stays visible */
+    linear-gradient(to bottom, rgba(0,0,0,0) 82%, rgba(0,0,0,0.35)),
+    var(--bg-photo);
+  /* overlay repeats, gradient covers, photo = single image */
+  background-repeat: repeat, no-repeat, no-repeat !important;
+  /* overlay/gradient aligned to page; photo anchored bottom-right on desktop */
+  background-position: top left, bottom left, right bottom !important;
+  /* overlay auto, gradient full, photo not cropped on desktop */
+  background-size: auto, 100% 100%, contain !important;
+  transform: translateZ(0);
+}
+
+/* BLACK & WHITE layer (fades in above color) */
+body::after{
+  content:"";
+  position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background-image:
+    url("images/overlay.png"),
+    linear-gradient(to bottom, rgba(0,0,0,0) 82%, rgba(0,0,0,0.35)),
+    var(--bg-photo);
+  background-repeat: repeat, no-repeat, no-repeat !important;
+  background-position: top left, bottom left, right bottom !important;
+  background-size: auto, 100% 100%, contain !important;
+
+  /* true black & white (not gray) + smooth fade */
+  filter: grayscale(1) contrast(2.2) brightness(1.15);
+  opacity: var(--bw-opacity);
+  transition: opacity 1.5s ease-in-out;
+}
+
+/* MOBILE: keep vertical composition with cover + center top */
+@media (max-width: 768px){
+  body::before,
+  body::after{
+    background-position: top left, bottom left, center top !important;
+    background-size: auto, 100% 100%, cover !important;
+  }
+}
+
+/* reduced-motion users get no animation */
+@media (prefers-reduced-motion: reduce){
+  body::after{ transition: none; }
 }
