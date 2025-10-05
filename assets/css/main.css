@@ -214,28 +214,41 @@ body {
   overflow-x: hidden;
 }
 
-/* black‑and‑white version sits above, starts transparent */
+/* Reset box model */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+/* Fixed visual background layer */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: 0;
-  pointer-events: none;
+  z-index: -1; /* behind everything */
 
-  /* same background but black and white */
+  /* Your three-layer background: overlay + gradient + photo */
   background-image:
     url("images/overlay.png"),
     linear-gradient(to bottom, rgba(0,0,0,0) 75%, rgba(0,0,0,0.65)),
     url("../../images/fulls/25.png");
+
   background-repeat: repeat, no-repeat, repeat-x;
-  background-position: top left, bottom left, right bottom;
-  background-size: auto, 100% 100%, contain;
-  background-attachment: fixed, fixed, fixed;
+  background-position: top left, bottom left, left center;
+  background-size: auto, 100%, cover;
 
-  filter: grayscale(1) contrast(10); /* turn it true black & white */
+  /* Prevent scroll artifacts on mobile */
+  transform: translateZ(0);
+  will-change: transform;
+}
 
-  opacity: var(--bw-opacity);        /* fade control */
-  transition: opacity 0.4s ease;     /* smooth fade */
+/* Ensure content scrolls over the fixed layer */
+body {
+  position: relative;
+  min-height: 100%;
+  overflow-x: hidden;
+  color: white; /* optional */
 }
 
 body.is-preload *,
