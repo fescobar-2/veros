@@ -1159,3 +1159,120 @@ body::after {
 		transition: none;
 	}
 }
+
+/* ===============================
+   SAFARI / iOS COMPATIBILITY FIXES
+   Paste at the very end of main.css
+   =============================== */
+
+/* 1) iOS: avoid white gaps/flicker with fixed+filters
+      → use scroll attachment on iOS, keep composited layers */
+@supports (-webkit-touch-callout: none) {
+  body::before,
+  body::after {
+    background-attachment: scroll, scroll, scroll !important;
+    -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+    will-change: transform;
+  }
+
+  /* 2) WebKit needs the prefixed filter for reliable B&W */
+  body::after {
+    -webkit-filter: grayscale(1) contrast(2.2) brightness(1.15);
+            filter: grayscale(1) contrast(2.2) brightness(1.15);
+  }
+
+  /* 3) Glass card on mobile: ensure a non-transparent bg + prefixed blur */
+  @media (max-width: 768px) {
+    #main .item.intro.is-transparent {
+      background: rgba(20,12,7,0.24) !important;            /* must not be fully transparent for blur to show */
+      -webkit-backdrop-filter: blur(10px) saturate(120%);   /* Safari prefix */
+              backdrop-filter: blur(10px) saturate(120%);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+    }
+  }
+
+  /* 4) iOS viewport height quirk: prevent short pages / jumpy 100vh */
+  html, body { height: -webkit-fill-available; }
+  #wrapper   { min-height: -webkit-fill-available; }
+}
+
+/* 5) Make sure mobile actually swaps to the mobile asset on Safari too */
+@media (max-width: 768px) {
+  /* higher specificity + !important wins over any earlier rules */
+  html body::before {
+    background-image:
+      url("images/overlay.png"),
+      linear-gradient(to top, rgba(0,0,0,0) 82%, rgba(0,0,0,0.35)),
+      url("../../images/fulls/13.jpg") !important;
+    background-position: top left, bottom left, center top !important;
+    background-size: auto, 100% 100%, cover !important;
+  }
+  html body::after {
+    background-image:
+      url("images/overlay.png"),
+      linear-gradient(to top, rgba(0,0,0,0) 82%, rgba(0,0,0,0.35)),
+      url("../../images/fulls/13.jpg") !important;
+    background-position: top left, bottom left, center top !important;
+    background-size: auto, 100% 100%, cover !important;
+  }
+}
+
+/* =========================
+   MOBILE TOUCH SCROLL FIX
+   (paste at end of main.css)
+   ========================= */
+
+@media (max-width: 900px), (pointer: coarse) {
+  /* Use the real mobile viewport height and allow vertical scroll */
+  html, body { height: auto; }
+
+  #main {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    /* Make #main the scroll container on mobile */
+    min-height: 100dvh;                 /* dynamic viewport height (Android/iOS) */
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    /* Make touch scrolling smooth + let browser handle the gesture */
+    -webkit-overflow-scrolling: touch;  /* momentum scrolling on iOS */
+    touch-action: pan-y;                /* Chrome/Android: vertical pan */
+    overscroll-behavior-y: contain;     /* optional: avoid bounce chaining */
+  }
+
+  /* If you added a glass film on #main::before, don't let it be fixed.
+     Fixed, full-screen overlays can trap touch on Android. */
+  #main::before {
+    position: absolute !important;  /* was fixed; now scrolls with content */
+    inset: 0;
+    pointer-events: none;
+  }
+
+  /* Your big background layers should NEVER catch taps/swipes */
+  body::before,
+  body::after {
+    pointer-events: none !important;
+    /* iOS also prefers scroll attachment for fixed BGs */
+    background-attachment: scroll, scroll, scroll !important;
+    -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+  }
+
+  /* If you used scroll-snap for a “paging” feel, loosen it for touch */
+  #main { scroll-snap-type: y proximity; }  /* or comment out to test: none */
+}
+
+/* Mobile: let the container handle vertical panning smoothly */
+@media (max-width: 900px), (pointer: coarse) {
+  #main {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;      /* vertical layout on mobile */
+    -webkit-overflow-scrolling: touch;  /* iOS momentum scrolling */
+    touch-action: pan-y;                /* tell Chrome/Android it's vertical */
+  }
+  /* if you have a glass overlay on #main::before, ensure it doesn't trap touch */
+  #main::before { pointer-events: none; }
+}

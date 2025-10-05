@@ -47,29 +47,55 @@
 
 		};
 
-	let startX = 0;
+	// --- Touch drag: allow vertical scroll on mobile ---
+	// If you want to disable drag entirely on touch devices, set DISABLE_ON_COARSE = true.
+	const DISABLE_ON_COARSE = false; // change to true to fully disable touch drag on phones/tablets
+	const isCoarse = window.matchMedia('(pointer: coarse)').matches;
+
+	let startX = 0, startY = 0;
 	let scrollLeft = 0;
 	let isDragging = false;
-    const main = document.querySelector("#main");
+	let isHorizontalDrag = false;
+	const DRAG_THRESHOLD = 6; // px before deciding orientation
 
+	const main = document.querySelector("#main");
+
+	if (!(DISABLE_ON_COARSE && isCoarse)) {
 	main.addEventListener("touchstart", function (event) {
-		const touch = event.touches[0];
-		startX = touch.pageX;
+		const t = event.touches[0];
+		startX = t.pageX;
+		startY = t.pageY;
 		scrollLeft = main.scrollLeft;
 		isDragging = true;
-	});
+		isHorizontalDrag = false; // undecided yet
+	}, { passive: true });
 
 	main.addEventListener("touchmove", function (event) {
 		if (!isDragging) return;
-		const touch = event.touches[0];
-		const moveX = touch.pageX - startX;
-		main.scrollLeft = scrollLeft - moveX;
-		event.preventDefault(); // Prevents vertical scrolling conflicts
-	});
+
+		const t = event.touches[0];
+		const dx = t.pageX - startX;
+		const dy = t.pageY - startY;
+
+		// Decide direction after a small threshold
+		if (!isHorizontalDrag && Math.hypot(dx, dy) > DRAG_THRESHOLD) {
+		isHorizontalDrag = Math.abs(dx) > Math.abs(dy);
+		}
+
+		// If it's a vertical gesture, let the browser handle scrolling.
+		if (!isHorizontalDrag) return; // no preventDefault -> vertical scroll works
+
+		// Horizontal drag: move the gallery and prevent the page from scrolling.
+		main.scrollLeft = scrollLeft - dx;
+		event.preventDefault(); // only block when actually dragging horizontally
+	}, { passive: false }); // must be passive:false to allow preventDefault
 
 	main.addEventListener("touchend", function () {
 		isDragging = false;
-	});
+		isHorizontalDrag = false;
+	}, { passive: true });
+	}
+
 
 	// Breakpoints.
 	breakpoints({
