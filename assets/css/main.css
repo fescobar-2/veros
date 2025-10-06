@@ -1080,7 +1080,7 @@ body::after {
 		url("../../images/fulls/31.jpg") !important;
 
 	/* true B&W + smooth fade */
-	filter: grayscale(1) contrast(2.2) brightness(1.15);
+	filter: grayscale(1) contrast(5) brightness(1.01);
 	opacity: var(--bw-opacity, 0);
 	transition: opacity 1.5s ease-in-out;
 }
